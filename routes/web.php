@@ -17,12 +17,19 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-/*
-// unsecure routes 
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/users1',['uses' => 'UserController@getUsers']);
+//Test your remote service
+$router->get('/test', function () {
+    return 'OK';
 });
-*/
+
+$router->get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return "Connected successfully to database: " . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        return "Could not connect to the database. Error: " . $e->getMessage();
+    }
+});
 
 $router->group(['middleware' => 'auth.access'], function () use ($router) {
 
